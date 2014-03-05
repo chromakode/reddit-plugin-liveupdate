@@ -47,27 +47,6 @@ body.embed .infobar.welcome {
                 margin-right: 2em;
             }
         }
-
-        ul {
-            display: inline-block;
-        }
-
-        li {
-            display: inline-block;
-            margin: 0 .5em 0 0;
-
-            a {
-                margin-right: .1em;
-            }
-
-            &:after {
-                content: " + ";
-            }
-
-            &:last-child:after {
-                content: "";
-            }
-        }
     }
 }
 
@@ -266,8 +245,29 @@ aside.sidebar {
         font-weight: bold;
     }
 
-    .md + #discussions {
-        border-top: 1px dotted #999;
+    #reporters {
+        font-size: small;
+
+        ul {
+            display: inline-block;
+        }
+
+        li {
+            display: inline-block;
+            margin: 0 .5em 0 0;
+
+            a {
+                margin-right: .1em;
+            }
+
+            &:after {
+                content: " + ";
+            }
+
+            &:last-child:after {
+                content: "";
+            }
+        }
     }
 
     #discussions {

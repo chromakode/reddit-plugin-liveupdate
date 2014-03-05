@@ -18,17 +18,6 @@
 
   <p id="visitor-count">${_("viewers:")}&nbsp;<span class="count">${thing.visitor_count}</span></p>
 
-  <p>${_("reported by:")}</p>
-
-  <ul>
-    % for editor in thing.editors[:EDITOR_CUTOFF]:
-    <li>${editor}</li>
-    % endfor
-  </ul>
-
-  % if len(thing.editors) > EDITOR_CUTOFF:
-  <a href="/live/${c.liveupdate_event._id}/reporters" class="more-editors">${unsafe(_("&hellip; and %(count)s more &raquo;") % dict(count=len(thing.editors) - EDITOR_CUTOFF))}</a>
-  % endif
 </div>
 </header>
 
@@ -54,6 +43,17 @@
     ${utils.md(thing.event.description)}
   </section>
   % endif
+  <section id="reporters">
+    <h1>${_("reported by:")}</h1>
+    <ul>
+      % for editor in thing.editors[:EDITOR_CUTOFF]:
+      <li>${editor}</li>
+      % endfor
+    </ul>
+    % if len(thing.editors) > EDITOR_CUTOFF:
+    <a href="/live/${c.liveupdate_event._id}/reporters" class="more-editors">${unsafe(_("&hellip; and %(count)s more &raquo;") % dict(count=len(thing.editors) - EDITOR_CUTOFF))}</a>
+    % endif
+  </section>
   <section id="discussions">
     <h1>${_("discussions")}</h1>
     ${thing.discussions}
