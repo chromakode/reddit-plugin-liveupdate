@@ -11,13 +11,14 @@
 <h1 id="liveupdate-title">${thing.event.title}</h1>
 </div>
 
-<div class="tagline">
-  % if thing.event.state == "live":
-    <p class="state live">${_("live")}</p>
+<div ${utils.classes('tagline', 'live' if thing.event.state == 'live' else None)}>
+  % if thing.event.state == 'live':
+    <p class="state">${_("live")}</p>
   % endif
 
   <p id="visitor-count">${_("viewers:")}&nbsp;<span class="count">${thing.visitor_count}</span></p>
 
+  <p id="liveupdate-connection-status" class="loading"></p>
 </div>
 </header>
 

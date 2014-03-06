@@ -5,7 +5,7 @@ r.liveupdate = {
     init: function () {
         this.$listing = $('.liveupdate-listing')
         this.$table = this.$listing.find('table tbody')
-        this.$statusField = this.$listing.find('tr.initial td')
+        this.$statusField = $('#liveupdate-connection-status').removeClass('loading')
 
         this.$listing.find('nav.nextprev').remove()
         $(window)
