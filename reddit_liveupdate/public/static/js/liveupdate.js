@@ -4,12 +4,12 @@ r.liveupdate = {
 
     init: function () {
         this.$listing = $('.liveupdate-listing')
-        this.$table = this.$listing.find('table tbody')
+        this.$updates = this.$listing.find('ol')
         this.$statusField = $('#liveupdate-connection-status').removeClass('loading')
 
         this.$listing.find('nav.nextprev').remove()
         $(window)
-            .scroll($.proxy(this, '_loadMoreIfNearBottom'))
+            .scroll(_.throttle($.proxy(this, '_loadMoreIfNearBottom'), 250))
             .scroll()  // in case of a short page / tall window
 
         if (r.config.liveupdate_websocket) {
@@ -96,7 +96,7 @@ r.liveupdate = {
     },
 
     _onNewUpdate: function (data) {
-        var $initial = this.$listing.find('tr.initial')
+        var $initial = this.$listing.find('.initial')
 
         // this must've been the first update. refresh to get a proper listing.
         if (!this.$listing.length)
@@ -106,7 +106,7 @@ r.liveupdate = {
         _.each(data, function (thing) {
             var $newThing = $($.unsafe(thing.data.content))
             if (r.liveupdate.editor) {
-                r.liveupdate.editor._addButtons($newThing.find('td'))
+                r.liveupdate.editor._addButtons($newThing.find('li'))
             }
             $initial.after($newThing)
             r.timetext.refreshOne($newThing.find('time.live'), now)
@@ -150,14 +150,14 @@ r.liveupdate = {
     _loadMoreIfNearBottom: function () {
         var hasUpdates = (this.$listing.length != 0)
         var isLoading = this.$listing.hasClass('loading')
-        var canLoadMore = (this.$table.find('.final').length == 0)
+        var canLoadMore = (this.$updates.find('.final').length == 0)
 
         if (!hasUpdates || isLoading || !canLoadMore)
             return
 
         // technically, window.innerHeight includes the horizontal
         // scrollbar if present. oh well.
-        var bottomOfTable = this.$table.offset().top + this.$table.height()
+        var bottomOfTable = this.$updates.offset().top + this.$updates.height()
         var topOfLastScreenful = bottomOfTable - window.innerHeight
         var nearBottom = ($(window).scrollTop() + 250 >= topOfLastScreenful)
 
@@ -166,7 +166,7 @@ r.liveupdate = {
     },
 
     _loadMore: function () {
-        var lastId = this.$table.find('tr:last-child').data('fullname')
+        var lastId = this.$updates.find('.thing:last-child').data('fullname')
 
         // in case we get stuck in a loop somehow, bail out.
         if (lastId == this.lastFetchedId)
@@ -175,7 +175,7 @@ r.liveupdate = {
         var params = $.param({
                 'bare': 'y',
                 'after': lastId,
-                'count': this.$table.find('tr.thing').length
+                'count': this.$updates.find('.thing').length
             })
         var url = '/live/' + r.config.liveupdate_event + '/?' + params
 
@@ -187,10 +187,10 @@ r.liveupdate = {
         })
             .done($.proxy(function (response) {
                 var $fragment = $(response),
-                    $newRows = $fragment.find('.liveupdate-listing tbody').children()
+                    $newRows = $fragment.find('.liveupdate-listing ol').children()
 
                 this.$listing.trigger('more-updates', [$newRows])
-                this.$table.append($newRows)
+                this.$updates.append($newRows)
                 this.lastFetchedId = lastId
 
                 r.timetext.refresh()

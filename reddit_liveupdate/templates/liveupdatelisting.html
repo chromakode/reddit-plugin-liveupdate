@@ -10,34 +10,28 @@
 
 %if thing.things:
 <div class="liveupdate-listing">
-<table>
-  <tbody>
-    % if not thing.prev:
-    <tr class="initial">
-      <td colspan="2">
-        % if c.liveupdate_event.state == "complete":
-        ${unsafe(_("no further updates &mdash; event is over"))}
-        % else:
-        ${unsafe(_("as of&#32;%(when)s" % dict(when=capture(live_timestamp, thing))))}
-        % endif
-      </td>
-    </tr>
+<ol>
+  % if not thing.prev:
+  <li class="initial">
+    % if c.liveupdate_event.state == "complete":
+    ${unsafe(_("no further updates &mdash; event is over"))}
+    % else:
+    ${unsafe(_("as of&#32;%(when)s" % dict(when=capture(live_timestamp, thing))))}
     % endif
+  </li>
+  % endif
 
-    % for item in thing.things_with_separators():
-    ${item}
-    % endfor
+  % for item in thing.things_with_separators():
+  ${item}
+  % endfor
 
-    % if not thing.next:
-    <tr class="final">
-      <th>
-        <time datetime="${html_datetime(thing.things[-1]._date)}">${thing.things[-1].date_str}</time>
-      </th>
-      <td>${_("started live updates")}</td>
-    </tr>
-    % endif
-  </tbody>
-</table>
+  % if not thing.next:
+  <li class="final">
+    <time datetime="${html_datetime(thing.things[-1]._date)}">${thing.things[-1].date_str}</time>
+    <span>${_("started live updates")}</span>
+  </li>
+  % endif
+</ol>
 
 % if thing.nextprev and (thing.prev or thing.next):
 <nav class="nextprev">

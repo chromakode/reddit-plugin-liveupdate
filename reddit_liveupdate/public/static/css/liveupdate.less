@@ -81,6 +81,8 @@ body.embed .infobar.welcome {
     }
 }
 
+@sidebar-width: 300px;
+
 .liveupdate-listing {
     max-width: 600px;
     min-width: 300px;
@@ -91,145 +93,134 @@ body.embed .infobar.welcome {
         background: url(../throbber.gif) center bottom no-repeat;
     }
 
-    table {
-        .embed & {
-            width: 600px;
-        }
+    .embed & {
+        width: 600px;
+    }
 
-        @transition-time: .3s;
+    @time-column-width: 120px;
+    @line-border: 1px solid #ddd;
+    @transition-time: .3s;
 
-        tr.initial + tr {
-            th {
-                font-size: medium;
-            }
+    time {
+        color: #888;
+        display: inline-block;
+        white-space: nowrap;
+        width: @time-column-width;
+        max-width: @time-column-width;
+    }
 
-            td {
-                font-size: large;
-                padding-left: 1.2em;
+    li.stricken {
+        text-decoration: line-through;
+    }
 
-                a.author {
-                    font-size: small;
-                }
-            }
-        }
+    li {
+        vertical-align: top;
+        padding-bottom: .5em;
+    }
 
-        tr.stricken td.md {
-            text-decoration: line-through;
-        }
+    li.thing {
+        font-size: small;
 
-        th, td {
-            vertical-align: top;
-            padding-bottom: .5em;
-        }
-
-        th {
-            font-size: small;
-            width: 120px;
-            max-width: 120px;
+        time {
+            float: left;
             text-align: left;
             overflow: hidden;
+            transition: color @transition-time;
+        }
 
-            time {
-                font-size: smaller;
+        .body {
+            margin-left: @time-column-width;
+            overflow: hidden;
+            max-width: 480px;
+            word-break: break-word;
+        }
+
+        form, p {
+            display: inline;
+        }
+
+        p:first-child {
+            margin-top: 0;
+        }
+
+        a.author {
+            color: #b6c6d6;
+            transition: color @transition-time;
+        }
+
+        ul.buttonrow {
+            display: none;
+            font-size: small;
+            margin: .2em 0 0 0;
+
+            li {
                 display: inline-block;
-                white-space: nowrap;
-                color: #888;
-                transition: color @transition-time;
-            }
-        }
-
-        td {
-            padding-left: 2em;
-
-            &.md {
-                overflow: hidden;
-                max-width: 480px;
-                word-break: break-word;
+                margin: 0 1em 0 0;
             }
 
-            form, p {
-                display: inline;
-            }
-
-            p:first-child {
-                margin-top: 0;
-            }
-
-            a.author {
-                color: #b6c6d6;
-                transition: color @transition-time;
-            }
-
-            ul.buttonrow {
-                display: none;
+            button {
+                border: none;
+                background: inherit;
+                padding: 0;
                 font-size: small;
-                margin: .2em 0 0 0;
-
-                li {
-                    display: inline-block;
-                    margin: 0 1em 0 0;
-                }
-
-                button {
-                    border: none;
-                    background: inherit;
-                    padding: 0;
-                    font-size: small;
-                    color: #369;
-                }
-            }
-        }
-
-        tr:hover {
-            th time {
-                color: black;
-                transition: color @transition-time;
-            }
-
-            a.author {
                 color: #369;
-                transition: color @transition-time;
-            }
-
-            ul.buttonrow {
-                display: block;
             }
         }
+    }
 
-        tr.separator {
-            font-size: small;
-
-            td {
-                font-size: smaller;
-                padding: .7em 0;
-                background: #fff url(../liveupdate-border.png) center left repeat-x;
-
-                time {
-                    background: white;
-                    padding-right: 10px;
-                }
-            }
+    li:hover {
+        time {
+            color: black;
+            transition: color @transition-time;
         }
 
-        tr.initial {
-            color: #888;
-            border-bottom: 1px solid #888;
-
-            td {
-                padding: 0 0 .3em 0;
-            }
+        a.author {
+            color: #369;
+            transition: color @transition-time;
         }
 
-        tr.final {
-            font-size: small;
-            color: #888;
-            border-top: 1px solid #888;
-
-            td {
-                font-size: smaller;
-                padding: 0 0 0 2.5em;
-            }
+        ul.buttonrow {
+            display: block;
         }
+    }
+
+    li.time-separator {
+        color: #888;
+        font-size: small;
+        position: relative;
+        padding: 1.5em 0;
+
+        time {
+            position: relative;
+            background: white;
+        }
+
+        &:before {
+            content: '';
+            border-top: @line-border;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    li.initial {
+        color: #888;
+        border-bottom: @line-border;
+        margin-bottom: .75em;
+        padding-bottom: .3em;
+
+        &.connecting {
+            background: transparent url(../throbber.gif) no-repeat bottom right;
+        }
+    }
+
+    li.final {
+        color: #888;
+        border-top: @line-border;
+        margin-top: .75em;
+        padding-top: .3em;
     }
 }
 
@@ -249,7 +240,7 @@ nav.nextprev {
 
 aside.sidebar {
     color: #333;
-    width: 300px;
+    width: @sidebar-width;
     float: right;
     margin-left: 30px;
 
@@ -327,6 +318,12 @@ aside.sidebar {
     }
 }
 
+@media all and (min-width: 700px) {
+    .liveupdate-listing {
+        margin-right: @sidebar-width + 20px;
+    }
+}
+
 @media all and (max-width: 700px) {
     #new-update-form {
         margin-bottom: 1em;
@@ -367,18 +364,18 @@ aside.sidebar {
         }
     }
 
-    .liveupdate-listing tr.thing,
-    .liveupdate-listing tr.final {
+    .liveupdate-listing li.thing,
+    .liveupdate-listing li.final {
         display: block;
 
-        th, td {
-            display: block;
-        }
-
-        th {
+        time {
             float: right;
             margin-left: 1em;
             text-align: right;
+        }
+
+        .body {
+            margin-left: 0;
         }
     }
 
